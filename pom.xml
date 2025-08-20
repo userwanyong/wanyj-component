@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>wanyj-component-design-pattern-framework</module>
         <module>wanyj-component-dynamic-config-center</module>
         <module>wanyj-component-test</module>
     </modules>
