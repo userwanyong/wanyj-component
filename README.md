@@ -56,14 +56,14 @@ private String t2;
 
 ## 2. 设计模式框架 - 规则树
 
-### 1.1. 简介
+### 2.1. 简介
 解耦业务逻辑与流程流转，将特定业务代码封装成节点，动态组装使用
 
-### 1.2 优点
+### 2.2 优点
 - 避免频繁地编写 if…else 逻辑
 - 可以回到已经走过的节点，实现节点复用
 
-### 1.3 使用方法
+### 2.3 使用方法
 #### step1: 引入依赖
 ```xml
 <dependency>
@@ -172,8 +172,79 @@ public class DefaultStrategyFactory {
     }
 }
 ```
-#### step6: 传入参数，进入规则树
+#### step6: 传入参数，执行规则树
 ```java
 StrategyHandler<String, DynamicContext, String> strategyHandler = defaultStrategyFactory.strategyHandler();
 String result = strategyHandler.apply("1379666", new DynamicContext());
+```
+
+## 3. 设计模式框架 - 责任链
+
+### 3.1. 简介
+预先组装好责任链节点，符合条件的请求按顺序执行
+
+### 3.2 优点
+- 拆成有针对性的节点，避免一个类中写大量代码
+- 便于调整先后顺序
+
+### 3.3 使用方法
+#### step1: 引入依赖
+```xml
+<dependency>
+    <groupId>cn.wanyj</groupId>
+    <artifactId>design-pattern-framework</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+#### step2: 根据需求，自定义上下文实体，并继承`ProceedDynamicContext`类
+```java
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class DynamicContext extends ProceedDynamicContext{
+    private int sum;
+
+    private Map<String, Object> dataObjects = new HashMap<>();
+
+    public <T> void setValue(String key, T value) {
+        dataObjects.put(key, value);
+    }
+
+    public <T> T getValue(String key) {
+        return (T) dataObjects.get(key);
+    }
+}
+```
+
+#### step3: 编写各个节点，并实现`ChainHandler<T, D extends ProceedDynamicContext, R>`接口
+- next(T request, D dynamicContext) 继续执行下一个节点
+- stop(T request, D dynamicContext, R result) 停止执行，返回当前结果
+```java
+@Slf4j
+@Component
+public class ChainNode1 implements ChainHandler<String, DynamicContext, String> {
+    @Override
+    public String apply(String userId, DynamicContext dynamicContext) {
+        log.info("[ChainNode1]");
+        return next(userId, dynamicContext);
+    }
+}
+```
+#### step5: 组装责任链
+```java
+@Service
+public class DefaultChainFactory {
+    @Bean
+    public BusinessLinkedList<String, DynamicContext, String> d1(ChainNode1 node1, ChainNode2 node2){
+        ChainArmory<String, DynamicContext, String> chainArmory = new ChainArmory<>("d1", node1, node2);
+        return chainArmory.getBusinessLinkedList();
+    }
+}
+```
+#### step6: 传入参数，执行责任链
+```java
+@Resource
+private BusinessLinkedList<String, DynamicContext, String> businessLinkedList;
+String result = businessLinkedList.apply("1379666", new DynamicContext());
 ```
