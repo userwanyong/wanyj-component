@@ -1,4 +1,4 @@
-package cn.wanyj.component.test;
+package cn.wanyj.component.test.dcc;
 
 import cn.wanyj.component.dcc.domain.entity.AttributeEntity;
 import cn.wanyj.component.dcc.types.annotations.DccConfig;
@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-class DccTests {
+class DccTest {
 
     @DccConfig("0")
     private String t1;

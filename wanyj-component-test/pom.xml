@@ -33,6 +33,12 @@
             <artifactId>dynamic-config-center-spring-boot-starter</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- 设计模式框架 -->
+        <dependency>
+            <groupId>cn.wanyj</groupId>
+            <artifactId>design-pattern-framework</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
