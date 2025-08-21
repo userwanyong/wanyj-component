@@ -6,7 +6,7 @@
     <artifactId>wanyj-component-test</artifactId>
 
     <parent>
-        <groupId>cn.wanyj</groupId>
+        <groupId>cn.wanyj.component</groupId>
         <artifactId>wanyj-component</artifactId>
         <version>1.0.0</version>
     </parent>
@@ -29,13 +29,13 @@
 
         <!-- 动态配置中心 -->
         <dependency>
-            <groupId>cn.wanyj</groupId>
+            <groupId>cn.wanyj.component</groupId>
             <artifactId>dynamic-config-center-spring-boot-starter</artifactId>
             <version>1.0.0</version>
         </dependency>
         <!-- 设计模式框架 -->
         <dependency>
-            <groupId>cn.wanyj</groupId>
+            <groupId>cn.wanyj.component</groupId>
             <artifactId>design-pattern-framework</artifactId>
             <version>1.0.0</version>
         </dependency>

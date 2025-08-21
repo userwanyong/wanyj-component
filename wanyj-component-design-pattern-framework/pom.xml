@@ -4,44 +4,133 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cn.wanyj</groupId>
+        <groupId>cn.wanyj.component</groupId>
         <artifactId>wanyj-component</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <artifactId>design-pattern-framework</artifactId>
 
+    <name>design-pattern-framework</name>
+    <description>wanyj component design-pattern-framework</description>
+    <url>https://github.com/userwanyong/wanyj-component</url>
+
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>https://opensource.org/license/apache-2-0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>yong</id>
+            <name>userwanyong</name>
+            <email>2026804718@qq.com</email>
+            <url>wanyj.cn</url>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>Asia/Shanghai</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/userwanyong/wanyj-component.git</connection>
+        <developerConnection>scm:git:https://github.com/userwanyong/wanyj-component.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/userwanyong/wanyj-component</url>
+    </scm>
+
+
     <dependencies>
 
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <!-- 编译插件 -->
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <!-- source源码插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- javadoc插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
                 <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <javadocExecutable>${java.home}/bin/javadoc.exe</javadocExecutable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- gpg加密插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <!--指定用于签名的 GPG 密钥名称-->
+                    <keyname>cn.wanyj.component</keyname>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- central发布插件 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>zxc</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
         </plugins>

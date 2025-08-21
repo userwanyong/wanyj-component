@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.wanyj</groupId>
+    <groupId>cn.wanyj.component</groupId>
     <artifactId>wanyj-component</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
@@ -12,6 +12,7 @@
         <module>wanyj-component-design-pattern-framework</module>
         <module>wanyj-component-dynamic-config-center</module>
         <module>wanyj-component-test</module>
+        <module>wanyj-component-bom</module>
     </modules>
 
     <parent>
@@ -26,6 +27,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <redisson.version>3.26.0</redisson.version>
+        <spring.boot.version>3.4.3</spring.boot.version>
     </properties>
 
     <dependencyManagement>
@@ -56,27 +59,22 @@
                 <version>4.13.1</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>3.26.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>3.14.0</version>-->
+<!--                <configuration>-->
+<!--                    <source>${java.version}</source>-->
+<!--                    <target>${java.version}</target>-->
+<!--                    <encoding>${project.build.sourceEncoding}</encoding>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
