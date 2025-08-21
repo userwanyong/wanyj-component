@@ -13,7 +13,7 @@
 #### step1: 引入依赖
 ```xml
 <dependency>
-    <groupId>cn.wanyj</groupId>
+    <groupId>cn.wanyj.component</groupId>
     <artifactId>dynamic-config-center-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -67,7 +67,7 @@ private String t2;
 #### step1: 引入依赖
 ```xml
 <dependency>
-    <groupId>cn.wanyj</groupId>
+    <groupId>cn.wanyj.component</groupId>
     <artifactId>design-pattern-framework</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -191,7 +191,7 @@ String result = strategyHandler.apply("1379666", new DynamicContext());
 #### step1: 引入依赖
 ```xml
 <dependency>
-    <groupId>cn.wanyj</groupId>
+    <groupId>cn.wanyj.component</groupId>
     <artifactId>design-pattern-framework</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -223,7 +223,7 @@ public class DynamicContext extends ProceedDynamicContext{
 ```java
 @Slf4j
 @Component
-public class ChainNode1 implements ChainHandler<String, DynamicContext, String> {
+public class ChainNode1 implements ChainHandler<入参, 上下文实体, 出参> {
     @Override
     public String apply(String userId, DynamicContext dynamicContext) {
         log.info("[ChainNode1]");
