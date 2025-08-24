@@ -13,6 +13,7 @@
         <module>wanyj-component-dynamic-config-center</module>
         <module>wanyj-component-test</module>
         <module>wanyj-component-bom</module>
+        <module>wanyj-component-rate-limiter</module>
     </modules>
 
     <parent>
@@ -65,16 +66,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <version>3.14.0</version>-->
-<!--                <configuration>-->
-<!--                    <source>${java.version}</source>-->
-<!--                    <target>${java.version}</target>-->
-<!--                    <encoding>${project.build.sourceEncoding}</encoding>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
