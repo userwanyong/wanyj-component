@@ -1,13 +1,18 @@
 # Getting Started
 
+- [1. 动态配置中心](#1-动态配置中心)
+- [2. 设计模式框架 - 规则树](#2-设计模式框架---规则树)
+- [3. 设计模式框架 - 责任链](#3-设计模式框架---责任链)
+- [4. 动态限流组件](#4-动态限流组件)
+
 ## 1. 动态配置中心
 
 ### 1.1. 简介
-一个分布式动态配置中心，基于Redisson实现，通过发布/订阅模式实现属性值的动态更新
+一个分布式动态配置中心，基于 Redisson 实现，通过发布/订阅模式实现属性值的动态更新
 
 ### 1.2 优点
 - 保证了分布式场景的数据一致性
-- 不需要频繁的从Redis中获取数据
+- 不需要频繁的从 Redis 中获取数据
 
 ### 1.3 使用方法
 #### step1: 引入依赖
@@ -18,7 +23,7 @@
     <version>1.0.0</version>
 </dependency>
 ```
-#### step2: 配置yml
+#### step2: 配置 yml
 ```yml
 wanyj:
   component:
@@ -41,8 +46,8 @@ spring:
         master:
         nodes:
 ```
-对于Redisson的配置，可以参考Redisson的官方文档：https://redisson.pro/docs/integration-with-spring 按需配置即可
-#### step3: 使用注解
+对于 Redisson 的配置，可以参考 Redisson 的官方文档：https://redisson.pro/docs/integration-with-spring 按需配置即可
+#### step3: 通过注解方式使用
 1. 使用字段名作为属性名
 ```java
 @DccConfig("0")
@@ -52,6 +57,13 @@ private String t1;
 ```java
 @DccConfig("custom:0")
 private String t2;
+```
+#### step4: 配置变更
+```java
+@Resource
+private RTopic dynamicConfigCenterRedisTopic;
+dynamicConfigCenterRedisTopic.publish(new AttributeEntity("t1", "1"));
+dynamicConfigCenterRedisTopic.publish(new AttributeEntity("custom", "1"));
 ```
 
 ## 2. 设计模式框架 - 规则树
@@ -247,4 +259,81 @@ public class DefaultChainFactory {
 @Resource
 private BusinessLinkedList<String, DynamicContext, String> businessLinkedList;
 String result = businessLinkedList.apply("1379666", new DynamicContext());
+```
+
+## 4. 动态限流组件
+
+### 1.1. 简介
+使用 Aop 切面技术，基于 Redisson 实现，对用户进行规定时间内的访问频次限制、以及黑名单操作，保证系统安全性
+
+### 1.2 优点
+- 保证了分布式场景的数据一致性
+- 对用户异常频繁访问行为进行拦截
+
+### 1.3 使用方法
+#### step1: 引入依赖
+```xml
+<dependency>
+    <groupId>cn.wanyj.component</groupId>
+    <artifactId>rate-limiter-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+#### step2: 针对 Redis 配置 yml
+```yml
+spring:
+  data:
+    redis:
+      database: 
+      host:
+      port:
+      password:
+      ssl: 
+      timeout:
+      connectTimeout:
+      clientName:
+      cluster:
+        nodes:
+      sentinel:
+        master:
+        nodes:
+```
+可以参考Redisson的官方文档：https://redisson.pro/docs/integration-with-spring 按需配置即可
+#### step3: 通过注解方式使用
+```java
+@RateLimiterInterceptor(key = "userId", permitsPerSecond = 1, blacklistCount = 3, blacklistTime = 24, fallbackMethod = "error")
+```
+- key: 限流标识
+- permitsPerSecond: 限制频次（每秒请求次数）
+- blacklistCount: 黑名单拦截（多少次限制后加入黑名单）
+- blacklistTime: 黑名单时间（多少时间后移出黑名单）默认 24h
+- fallbackMethod: 拦截后执行的方法
+
+示例
+```java
+/**
+ * 将 userId 作为限流标识，如果每秒请求数量超过 1 次，进行限流，调用 error 方法；
+ * 如果 1 分钟内总限流次数达到 3 次，则加入黑名单，24h 后移出黑名单
+ * http://127.0.0.1:8080/api/rl?userId=wanyj
+ */
+@GetMapping("/rl")
+@RateLimiterInterceptor(key = "userId", permitsPerSecond = 1, blacklistCount = 3, blacklistTime = 24, fallbackMethod = "error")
+public String rl(String userId) {
+    log.info("pass: rl");
+    return "pass: rl";
+}
+
+public String error(String userId) {
+    log.warn("error: rateLimiter");
+    return "error: rateLimiter";
+}
+```
+#### step4: 全局控制限流功能的开启与关闭
+搭配 dcc 动态配置中心使用，直接调整属性值即可
+- key: rateLimiterSwitch
+- value: open(默认)/close
+```java
+@Resource
+private RTopic dynamicConfigCenterRedisTopic;
+dynamicConfigCenterRedisTopic.publish(new AttributeEntity("rateLimiterSwitch", "close"));
 ```
